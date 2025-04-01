@@ -12,6 +12,8 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
 import About from "./pages/About";
+import TripDetails from "./pages/TripDetails";
+import CreateTrip from "./pages/CreateTrip";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +34,16 @@ const App = () => (
               </ProtectedRoute>
             } />
             <Route path="/about" element={<About />} />
+            <Route path="/trip/:id" element={
+              <ProtectedRoute>
+                <TripDetails />
+              </ProtectedRoute>
+            } />
+            <Route path="/create-trip" element={
+              <ProtectedRoute>
+                <CreateTrip />
+              </ProtectedRoute>
+            } />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
