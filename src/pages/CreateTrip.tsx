@@ -27,6 +27,8 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 // Form schema
 const formSchema = z.object({
@@ -45,6 +47,8 @@ const formSchema = z.object({
 const CreateTrip = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -56,17 +60,60 @@ const CreateTrip = () => {
     },
   });
   
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    // This would normally save to a database
-    console.log("Form values:", values);
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    if (!user) {
+      toast({
+        title: "Authentication error",
+        description: "You must be logged in to create a trip.",
+        variant: "destructive"
+      });
+      return;
+    }
     
-    toast({
-      title: "Trip created!",
-      description: `Your trip to ${values.destination} has been created.`,
-    });
+    setIsSubmitting(true);
     
-    // Navigate to dashboard after creation
-    navigate("/dashboard");
+    try {
+      // Calculate duration in days
+      const startDate = values.startDate;
+      const endDate = values.endDate;
+      const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // +1 to include both start and end days
+      
+      // Generate a random image from Unsplash travel collection
+      const imageId = Math.floor(Math.random() * 10) + 1;
+      const randomImage = `https://source.unsplash.com/random/800x600/?travel,${values.destination.split(',')[0]}`;
+      
+      const { error } = await supabase.from('trips').insert({
+        user_id: user.id,
+        destination: values.destination,
+        start_date: values.startDate.toISOString(),
+        end_date: values.endDate.toISOString(),
+        budget: values.budget,
+        description: values.description || "",
+        interests: values.interests,
+        status: "planning",
+        image: randomImage
+      });
+      
+      if (error) throw error;
+      
+      toast({
+        title: "Trip created!",
+        description: `Your trip to ${values.destination} has been created.`,
+      });
+      
+      // Navigate to dashboard after creation
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Error creating trip:", error);
+      toast({
+        title: "Error creating trip",
+        description: "There was a problem creating your trip. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   
   return (
@@ -264,7 +311,9 @@ const CreateTrip = () => {
                   <Button type="button" variant="outline" onClick={() => navigate("/dashboard")}>
                     Cancel
                   </Button>
-                  <Button type="submit">Create Trip</Button>
+                  <Button type="submit" disabled={isSubmitting}>
+                    {isSubmitting ? "Creating..." : "Create Trip"}
+                  </Button>
                 </div>
               </form>
             </Form>

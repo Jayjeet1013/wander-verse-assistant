@@ -36,6 +36,51 @@ export type Database = {
         }
         Relationships: []
       }
+      trips: {
+        Row: {
+          budget: string
+          created_at: string
+          description: string | null
+          destination: string
+          end_date: string
+          id: string
+          image: string
+          interests: string
+          start_date: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          budget: string
+          created_at?: string
+          description?: string | null
+          destination: string
+          end_date: string
+          id?: string
+          image?: string
+          interests: string
+          start_date: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          budget?: string
+          created_at?: string
+          description?: string | null
+          destination?: string
+          end_date?: string
+          id?: string
+          image?: string
+          interests?: string
+          start_date?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Menu, Search, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,41 +7,91 @@ import { Input } from "@/components/ui/input";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import TripStats from "@/components/dashboard/TripStats";
 import TripsList from "@/components/dashboard/TripsList";
-
-// Sample travel plans
-const travelPlans = [
-  {
-    id: 1,
-    destination: "Tokyo, Japan",
-    dateRange: "Oct 15 - Oct 25, 2023",
-    image: "https://images.unsplash.com/photo-1536098561742-ca998e48cbcc",
-    status: "completed",
-    days: 10
-  },
-  {
-    id: 2,
-    destination: "Paris, France",
-    dateRange: "Dec 10 - Dec 18, 2023",
-    image: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34",
-    status: "upcoming",
-    days: 8
-  },
-  {
-    id: 3,
-    destination: "Bali, Indonesia",
-    dateRange: "Jan 5 - Jan 15, 2024",
-    image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4",
-    status: "planning",
-    days: 10
-  }
-];
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
+import { TripCardProps } from "@/components/dashboard/TripCard";
+import { format, parseISO, differenceInDays } from "date-fns";
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [trips, setTrips] = useState<TripCardProps[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [stats, setStats] = useState({
+    total: 0,
+    upcoming: 0,
+    planning: 0,
+    completed: 0
+  });
+  
+  const { user } = useAuth();
+  const { toast } = useToast();
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
+
+  useEffect(() => {
+    if (!user) return;
+    
+    const fetchTrips = async () => {
+      setIsLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from('trips')
+          .select('*')
+          .order('created_at', { ascending: false });
+        
+        if (error) throw error;
+        
+        if (data) {
+          const formattedTrips = data.map(trip => {
+            const startDate = parseISO(trip.start_date);
+            const endDate = parseISO(trip.end_date);
+            const days = differenceInDays(endDate, startDate) + 1; // +1 to include both start and end day
+            
+            return {
+              id: trip.id,
+              destination: trip.destination,
+              dateRange: `${format(startDate, 'MMM d')} - ${format(endDate, 'MMM d, yyyy')}`,
+              image: trip.image,
+              status: trip.status,
+              days: days
+            };
+          });
+          
+          setTrips(formattedTrips);
+          
+          // Calculate stats
+          const statsCounts = {
+            total: formattedTrips.length,
+            upcoming: formattedTrips.filter(t => t.status === 'upcoming').length,
+            planning: formattedTrips.filter(t => t.status === 'planning').length,
+            completed: formattedTrips.filter(t => t.status === 'completed').length
+          };
+          
+          setStats(statsCounts);
+        }
+      } catch (error) {
+        console.error('Error fetching trips:', error);
+        toast({
+          title: "Error loading trips",
+          description: "There was a problem loading your trips. Please try again.",
+          variant: "destructive"
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchTrips();
+  }, [user, toast]);
+
+  // Filter trips based on search query
+  const filteredTrips = trips.filter(trip => 
+    trip.destination.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
@@ -82,6 +132,8 @@ const Dashboard = () => {
                   type="search"
                   placeholder="Search trips..."
                   className="pl-10 pr-4 py-2 w-64"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
               <Link to="/create-trip">
@@ -94,7 +146,12 @@ const Dashboard = () => {
           </div>
           
           {/* Trip statistics */}
-          <TripStats />
+          <TripStats 
+            total={stats.total}
+            upcoming={stats.upcoming}
+            planning={stats.planning}
+            completed={stats.completed}
+          />
           
           {/* Mobile new trip button */}
           <div className="md:hidden mb-6">
@@ -106,8 +163,29 @@ const Dashboard = () => {
             </Link>
           </div>
           
-          {/* Trip list */}
-          <TripsList trips={travelPlans} />
+          {/* Loading state */}
+          {isLoading ? (
+            <div className="flex justify-center items-center h-64">
+              <p className="text-gray-500">Loading your trips...</p>
+            </div>
+          ) : (
+            /* Trip list */
+            <TripsList trips={filteredTrips} />
+          )}
+          
+          {/* Empty state */}
+          {!isLoading && trips.length === 0 && (
+            <div className="bg-white rounded-xl shadow-sm p-10 text-center">
+              <div className="mb-4">
+                <PlusCircle className="h-12 w-12 text-gray-300 mx-auto" />
+              </div>
+              <h3 className="text-lg font-semibold text-travel-dark mb-2">No trips yet</h3>
+              <p className="text-gray-500 mb-6">Create your first trip to get started</p>
+              <Link to="/create-trip">
+                <Button className="btn-primary">Create New Trip</Button>
+              </Link>
+            </div>
+          )}
         </div>
       </main>
     </div>

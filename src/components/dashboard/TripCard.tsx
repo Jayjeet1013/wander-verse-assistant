@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Calendar, Clock } from "lucide-react";
 
 export interface TripCardProps {
-  id: number;
+  id: string | number;
   destination: string;
   dateRange: string;
   image: string;
