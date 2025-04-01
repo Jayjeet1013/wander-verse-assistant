@@ -1,23 +1,43 @@
 
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Mail, Lock, ArrowRight, Globe } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { signIn, user } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Redirect if user is already logged in
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would normally integrate with authentication
-    console.log("Sign in attempt with:", { email, password });
-    // For now we'll just simulate a successful login
-    alert("Sign in functionality will be implemented with Clerk in the next phase");
+    setError(null);
+    setIsSubmitting(true);
+
+    try {
+      await signIn(email, password);
+      // Navigation is handled by the useEffect above
+    } catch (err: any) {
+      setError(err.message || "Failed to sign in. Please check your credentials.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -33,6 +53,12 @@ const SignIn = () => {
           </div>
           
           <div className="glass-card p-8 rounded-2xl">
+            {error && (
+              <Alert variant="destructive" className="mb-6">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
@@ -71,9 +97,13 @@ const SignIn = () => {
                 </div>
               </div>
               
-              <Button type="submit" className="w-full btn-primary flex items-center justify-center space-x-2">
-                <span>Sign In</span>
-                <ArrowRight className="h-4 w-4" />
+              <Button 
+                type="submit" 
+                className="w-full btn-primary flex items-center justify-center space-x-2"
+                disabled={isSubmitting}
+              >
+                <span>{isSubmitting ? "Signing In..." : "Sign In"}</span>
+                {!isSubmitting && <ArrowRight className="h-4 w-4" />}
               </Button>
             </form>
             

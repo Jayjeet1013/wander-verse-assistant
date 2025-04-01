@@ -1,13 +1,22 @@
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Globe, LogIn } from "lucide-react";
+import { Menu, X, Globe, LogIn, LogOut, User } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+    setIsMenuOpen(false);
+  };
 
   return (
     <nav className="w-full py-4 px-6 md:px-12 lg:px-16 bg-white/90 backdrop-blur-md fixed top-0 left-0 z-50 shadow-sm">
@@ -28,12 +37,29 @@ const Navigation = () => {
           <Link to="/about" className="text-travel-dark hover:text-travel-primary transition-colors">
             About
           </Link>
-          <Link to="/signin">
-            <Button className="btn-primary flex items-center space-x-2">
-              <LogIn className="h-4 w-4" />
-              <span>Sign In</span>
-            </Button>
-          </Link>
+          
+          {user ? (
+            <>
+              <Link to="/dashboard" className="text-travel-dark hover:text-travel-primary transition-colors">
+                Dashboard
+              </Link>
+              <Button 
+                onClick={handleSignOut}
+                variant="outline" 
+                className="flex items-center space-x-2"
+              >
+                <LogOut className="h-4 w-4" />
+                <span>Sign Out</span>
+              </Button>
+            </>
+          ) : (
+            <Link to="/signin">
+              <Button className="btn-primary flex items-center space-x-2">
+                <LogIn className="h-4 w-4" />
+                <span>Sign In</span>
+              </Button>
+            </Link>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -67,12 +93,33 @@ const Navigation = () => {
             >
               About
             </Link>
-            <Link to="/signin" onClick={toggleMenu}>
-              <Button className="btn-primary w-full flex items-center justify-center space-x-2">
-                <LogIn className="h-4 w-4" />
-                <span>Sign In</span>
-              </Button>
-            </Link>
+            
+            {user ? (
+              <>
+                <Link 
+                  to="/dashboard" 
+                  className="text-travel-dark hover:text-travel-primary transition-colors py-2"
+                  onClick={toggleMenu}
+                >
+                  Dashboard
+                </Link>
+                <Button 
+                  onClick={handleSignOut}
+                  variant="outline" 
+                  className="w-full flex items-center justify-center space-x-2"
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span>Sign Out</span>
+                </Button>
+              </>
+            ) : (
+              <Link to="/signin" onClick={toggleMenu}>
+                <Button className="btn-primary w-full flex items-center justify-center space-x-2">
+                  <LogIn className="h-4 w-4" />
+                  <span>Sign In</span>
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       )}
