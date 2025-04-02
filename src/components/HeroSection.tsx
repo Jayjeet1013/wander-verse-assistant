@@ -1,6 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { MapPin, Calendar, ChevronRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   return (
@@ -21,13 +22,17 @@ const HeroSection = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 pt-4">
+            <Link to="/travel-assistant">
             <Button className="btn-primary flex items-center justify-center space-x-2 h-12">
               <span>Start Planning</span>
               <ChevronRight className="h-4 w-4" />
             </Button>
+            </Link>
+            <Link to="/about">
             <Button variant="outline" className="btn-outline h-12">
               Learn more
             </Button>
+            </Link>
           </div>
           
           <div className="grid grid-cols-3 gap-4 pt-6">
