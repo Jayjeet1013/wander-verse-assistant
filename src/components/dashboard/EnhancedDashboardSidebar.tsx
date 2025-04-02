@@ -55,28 +55,40 @@ const EnhancedDashboardSidebar = ({ isMobile, toggleSidebar }: DashboardSidebarP
     <div className="h-full flex flex-col">
       {isMobile && (
         <div className="p-4 flex justify-between items-center border-b">
-          <div className="font-bold text-travel-primary text-xl">TravelAI</div>
+          <Link to="/">
+            <div className="font-bold text-travel-primary text-xl">
+              WanderVerse
+            </div>
+          </Link>
           <button onClick={toggleSidebar} className="text-gray-500">
             <Menu className="h-6 w-6" />
           </button>
         </div>
       )}
-      
-      <div className={`${isMobile ? '' : 'p-4 border-b'}`}>
+
+      <div className={`${isMobile ? "" : "p-4 border-b"}`}>
         {!isMobile && (
-          <div className="font-bold text-travel-primary text-xl mb-6">TravelAI</div>
+          <Link to="/">
+            <div className="font-bold text-travel-primary text-xl mb-6">
+              WanderVerse
+            </div>
+          </Link>
         )}
-        
+
         <div className="flex flex-col space-y-1">
           {navItems.map((item) => (
-            <Link 
-              key={item.name} 
+            <Link
+              key={item.name}
               to={item.href}
               onClick={isMobile ? toggleSidebar : undefined}
             >
               <Button
                 variant="ghost"
-                className={`w-full justify-start ${location.pathname === item.href ? 'bg-travel-primary/10 text-travel-primary' : ''}`}
+                className={`w-full justify-start ${
+                  location.pathname === item.href
+                    ? "bg-travel-primary/10 text-travel-primary"
+                    : ""
+                }`}
               >
                 {item.icon}
                 <span className="ml-2">{item.name}</span>
@@ -85,10 +97,10 @@ const EnhancedDashboardSidebar = ({ isMobile, toggleSidebar }: DashboardSidebarP
           ))}
         </div>
       </div>
-      
+
       <div className="mt-auto p-4 border-t">
-        <Button 
-          variant="ghost" 
+        <Button
+          variant="ghost"
           className="w-full justify-start text-gray-500"
           onClick={signOut}
         >
