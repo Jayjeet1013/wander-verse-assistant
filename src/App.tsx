@@ -18,6 +18,7 @@ import Destinations from "./pages/Destinations";
 import Explore from "./pages/Explore";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
+import TravelAssistant from "./pages/TravelAssistant";
 
 const queryClient = new QueryClient();
 
@@ -50,6 +51,11 @@ const App = () => (
             <Route path="/settings" element={
               <ProtectedRoute>
                 <Settings />
+              </ProtectedRoute>
+            } />
+            <Route path="/travel-assistant" element={
+              <ProtectedRoute>
+                <TravelAssistant />
               </ProtectedRoute>
             } />
             <Route path="/about" element={<About />} />

@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
+import EnhancedDashboardSidebar from "@/components/dashboard/EnhancedDashboardSidebar";
 
 // Sample destinations data
 const POPULAR_DESTINATIONS = [
@@ -87,7 +87,7 @@ const Explore = () => {
     <div className="min-h-screen bg-gray-50 flex">
       {/* Sidebar for desktop */}
       <aside className="bg-white shadow-md w-64 hidden md:flex flex-col h-screen sticky top-0">
-        <DashboardSidebar />
+        <EnhancedDashboardSidebar />
       </aside>
       
       {/* Mobile sidebar overlay */}
@@ -97,7 +97,7 @@ const Explore = () => {
       
       {/* Mobile sidebar */}
       <aside className={`bg-white shadow-md w-64 fixed top-0 bottom-0 left-0 z-50 transition-transform duration-300 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:hidden`}>
-        <DashboardSidebar isMobile toggleSidebar={toggleSidebar} />
+        <EnhancedDashboardSidebar isMobile toggleSidebar={toggleSidebar} />
       </aside>
       
       {/* Main content */}

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Menu, Search, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
+import EnhancedDashboardSidebar from "@/components/dashboard/EnhancedDashboardSidebar";
 import TripStats from "@/components/dashboard/TripStats";
 import TripsList from "@/components/dashboard/TripsList";
 import { supabase } from "@/integrations/supabase/client";
@@ -101,7 +101,7 @@ const Dashboard = () => {
     <div className="min-h-screen bg-gray-50 flex">
       {/* Sidebar for desktop */}
       <aside className={`bg-white shadow-md w-64 hidden md:flex flex-col h-screen sticky top-0`}>
-        <DashboardSidebar />
+        <EnhancedDashboardSidebar />
       </aside>
       
       {/* Mobile sidebar overlay */}
@@ -111,7 +111,7 @@ const Dashboard = () => {
       
       {/* Mobile sidebar */}
       <aside className={`bg-white shadow-md w-64 fixed top-0 bottom-0 left-0 z-50 transition-transform duration-300 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:hidden`}>
-        <DashboardSidebar isMobile toggleSidebar={toggleSidebar} />
+        <EnhancedDashboardSidebar isMobile toggleSidebar={toggleSidebar} />
       </aside>
       
       {/* Main content */}
