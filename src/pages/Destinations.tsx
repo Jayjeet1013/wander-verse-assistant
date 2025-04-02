@@ -1,6 +1,5 @@
-
 import { useState, useEffect } from "react";
-import { Search, Map, Hotel, Utensils, Navigation, Globe } from "lucide-react";
+import { Search, Map, Hotel, Utensils, Compass as NavigationIcon, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -76,7 +75,6 @@ const Destinations = () => {
   useEffect(() => {
     let results = DESTINATIONS;
     
-    // Filter by search query
     if (searchQuery) {
       results = results.filter(dest => 
         dest.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -86,7 +84,6 @@ const Destinations = () => {
       );
     }
     
-    // Filter by tab category
     if (activeTab !== "all") {
       results = results.filter(dest => 
         dest.tags.some(tag => tag.toLowerCase() === activeTab.toLowerCase())
@@ -101,7 +98,6 @@ const Destinations = () => {
       <Navigation />
       
       <main className="flex-grow pt-20">
-        {/* Hero section */}
         <div className="bg-travel-primary/10 py-16">
           <div className="max-w-7xl mx-auto px-6 text-center">
             <h1 className="text-4xl md:text-5xl font-bold text-travel-dark mb-4">Explore Destinations</h1>
@@ -122,7 +118,6 @@ const Destinations = () => {
           </div>
         </div>
         
-        {/* Filter tabs */}
         <div className="max-w-7xl mx-auto px-6 py-8">
           <Tabs defaultValue="all" className="w-full" onValueChange={setActiveTab}>
             <TabsList className="grid grid-cols-4 md:grid-cols-7 mb-8">
@@ -137,7 +132,6 @@ const Destinations = () => {
           </Tabs>
         </div>
         
-        {/* Destinations grid */}
         <div className="max-w-7xl mx-auto px-6 py-8">
           {filteredDestinations.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -198,7 +192,6 @@ const Destinations = () => {
           )}
         </div>
         
-        {/* Travel Services */}
         <div className="bg-gray-50 py-16">
           <div className="max-w-7xl mx-auto px-6">
             <h2 className="text-3xl font-bold text-travel-dark text-center mb-16">Our Travel Services</h2>
@@ -243,7 +236,7 @@ const Destinations = () => {
               <Card className="bg-white">
                 <CardHeader className="text-center">
                   <div className="mx-auto bg-travel-primary/10 p-4 rounded-full mb-4">
-                    <Navigation className="h-8 w-8 text-travel-primary" />
+                    <NavigationIcon className="h-8 w-8 text-travel-primary" />
                   </div>
                   <CardTitle>Navigation Assistance</CardTitle>
                 </CardHeader>
