@@ -14,6 +14,7 @@ import Dashboard from "./pages/Dashboard";
 import About from "./pages/About";
 import TripDetails from "./pages/TripDetails";
 import CreateTrip from "./pages/CreateTrip";
+import Destinations from "./pages/Destinations";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +35,7 @@ const App = () => (
               </ProtectedRoute>
             } />
             <Route path="/about" element={<About />} />
+            <Route path="/destinations" element={<Destinations />} />
             <Route path="/trip/:id" element={
               <ProtectedRoute>
                 <TripDetails />
