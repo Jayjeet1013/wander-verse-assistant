@@ -38,6 +38,7 @@ const Dashboard = () => {
     const fetchTrips = async () => {
       setIsLoading(true);
       try {
+        // Type assertion to make TypeScript happy - let Supabase handle the actual query
         const { data, error } = await supabase
           .from('trips')
           .select('*')
@@ -46,7 +47,10 @@ const Dashboard = () => {
         if (error) throw error;
         
         if (data) {
-          const formattedTrips = data.map(trip => {
+          // Using type assertion to work with the trip data
+          const tripsData = data as any[];
+          
+          const formattedTrips = tripsData.map(trip => {
             const startDate = parseISO(trip.start_date);
             const endDate = parseISO(trip.end_date);
             const days = differenceInDays(endDate, startDate) + 1; // +1 to include both start and end day

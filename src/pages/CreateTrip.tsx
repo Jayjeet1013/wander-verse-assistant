@@ -83,17 +83,20 @@ const CreateTrip = () => {
       const imageId = Math.floor(Math.random() * 10) + 1;
       const randomImage = `https://source.unsplash.com/random/800x600/?travel,${values.destination.split(',')[0]}`;
       
-      const { error } = await supabase.from('trips').insert({
-        user_id: user.id,
-        destination: values.destination,
-        start_date: values.startDate.toISOString(),
-        end_date: values.endDate.toISOString(),
-        budget: values.budget,
-        description: values.description || "",
-        interests: values.interests,
-        status: "planning",
-        image: randomImage
-      });
+      // Using type assertion to make TypeScript happy with our table
+      const { error } = await supabase
+        .from('trips' as any)
+        .insert({
+          user_id: user.id,
+          destination: values.destination,
+          start_date: values.startDate.toISOString(),
+          end_date: values.endDate.toISOString(),
+          budget: values.budget,
+          description: values.description || "",
+          interests: values.interests,
+          status: "planning",
+          image: randomImage
+        } as any);
       
       if (error) throw error;
       
