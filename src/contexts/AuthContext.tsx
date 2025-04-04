@@ -1,8 +1,13 @@
-
-import { createContext, useState, useEffect, useContext, ReactNode } from 'react';
-import { Session, User } from '@supabase/supabase-js';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
+import {
+  createContext,
+  useState,
+  useEffect,
+  useContext,
+  ReactNode,
+} from "react";
+import { Session, User } from "@supabase/supabase-js";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 type AuthContextType = {
   session: Session | null;
@@ -23,12 +28,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Set up auth state listener FIRST
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-      }
-    );
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+    });
 
     // THEN check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -43,12 +48,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signIn = async (email: string, password: string) => {
     try {
       setLoading(true);
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
       if (error) {
         throw error;
       }
-      
+
       toast({
         title: "Welcome back!",
         description: "You've successfully signed in.",
@@ -68,20 +76,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signUp = async (email: string, password: string, fullName: string) => {
     try {
       setLoading(true);
-      const { error } = await supabase.auth.signUp({ 
-        email, 
+      const { error } = await supabase.auth.signUp({
+        email,
         password,
         options: {
           data: {
             full_name: fullName,
-          }
-        }
+          },
+        },
       });
-      
+
       if (error) {
         throw error;
       }
-      
+
       toast({
         title: "Account created!",
         description: "Please check your email to confirm your account.",
@@ -118,7 +126,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ session, user, signIn, signUp, signOut, loading }}>
+    <AuthContext.Provider
+      value={{ session, user, signIn, signUp, signOut, loading }}
+    >
       {children}
     </AuthContext.Provider>
   );
@@ -127,7 +137,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 }

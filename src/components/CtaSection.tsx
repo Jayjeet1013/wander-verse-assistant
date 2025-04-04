@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 
@@ -11,7 +10,8 @@ const CtaSection = () => {
             Ready to Transform Your Travel Experience?
           </h2>
           <p className="text-lg text-gray-700 max-w-2xl mx-auto mb-8">
-            Join WanderVerse today and discover the power of AI-assisted travel planning with connected agents in the Agentverse.
+            Join WanderVerse today and discover the power of AI-assisted travel
+            planning with connected agents in the Agentverse.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button className="btn-primary flex items-center justify-center space-x-2 h-12">

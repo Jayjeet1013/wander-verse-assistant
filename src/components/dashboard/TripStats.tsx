@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Calendar, Clock, MapPin, CreditCard } from "lucide-react";
 
@@ -9,7 +8,12 @@ interface TripStatsProps {
   completed: number;
 }
 
-const TripStats = ({ total, upcoming, planning, completed }: TripStatsProps) => {
+const TripStats = ({
+  total,
+  upcoming,
+  planning,
+  completed,
+}: TripStatsProps) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
       <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
@@ -23,7 +27,7 @@ const TripStats = ({ total, upcoming, planning, completed }: TripStatsProps) => 
           </div>
         </div>
       </div>
-      
+
       <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
         <div className="flex items-center space-x-4">
           <div className="bg-green-100 rounded-full p-3">
@@ -35,7 +39,7 @@ const TripStats = ({ total, upcoming, planning, completed }: TripStatsProps) => 
           </div>
         </div>
       </div>
-      
+
       <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
         <div className="flex items-center space-x-4">
           <div className="bg-amber-100 rounded-full p-3">
@@ -47,7 +51,7 @@ const TripStats = ({ total, upcoming, planning, completed }: TripStatsProps) => 
           </div>
         </div>
       </div>
-      
+
       <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
         <div className="flex items-center space-x-4">
           <div className="bg-purple-100 rounded-full p-3">

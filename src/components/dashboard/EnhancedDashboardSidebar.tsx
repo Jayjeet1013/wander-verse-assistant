@@ -1,14 +1,13 @@
-
 import { useLocation } from "react-router-dom";
-import { 
-  Home, 
-  Globe, 
-  User, 
-  Settings as SettingsIcon, 
-  Menu, 
+import {
+  Home,
+  Globe,
+  User,
+  Settings as SettingsIcon,
+  Menu,
   LogOut,
   Compass,
-  Sparkles
+  Sparkles,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -19,38 +18,41 @@ interface DashboardSidebarProps {
   toggleSidebar?: () => void;
 }
 
-const EnhancedDashboardSidebar = ({ isMobile, toggleSidebar }: DashboardSidebarProps) => {
+const EnhancedDashboardSidebar = ({
+  isMobile,
+  toggleSidebar,
+}: DashboardSidebarProps) => {
   const location = useLocation();
   const { signOut } = useAuth();
-  
+
   const navItems = [
-    { 
-      name: "Dashboard", 
-      href: "/dashboard", 
-      icon: <Home className="h-5 w-5" /> 
+    {
+      name: "Dashboard",
+      href: "/dashboard",
+      icon: <Home className="h-5 w-5" />,
     },
-    { 
-      name: "Explore", 
-      href: "/explore", 
-      icon: <Compass className="h-5 w-5" /> 
+    {
+      name: "Explore",
+      href: "/explore",
+      icon: <Compass className="h-5 w-5" />,
     },
-    { 
-      name: "AI Travel Assistant", 
-      href: "/travel-assistant", 
-      icon: <Sparkles className="h-5 w-5" /> 
+    {
+      name: "AI Travel Assistant",
+      href: "/travel-assistant",
+      icon: <Sparkles className="h-5 w-5" />,
     },
-    { 
-      name: "Profile", 
-      href: "/profile", 
-      icon: <User className="h-5 w-5" /> 
+    {
+      name: "Profile",
+      href: "/profile",
+      icon: <User className="h-5 w-5" />,
     },
-    { 
-      name: "Settings", 
-      href: "/settings", 
-      icon: <SettingsIcon className="h-5 w-5" /> 
-    }
+    {
+      name: "Settings",
+      href: "/settings",
+      icon: <SettingsIcon className="h-5 w-5" />,
+    },
   ];
-  
+
   return (
     <div className="h-full flex flex-col">
       {isMobile && (

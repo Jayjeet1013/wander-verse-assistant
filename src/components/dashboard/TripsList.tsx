@@ -1,4 +1,3 @@
-
 import React from "react";
 import TripCard, { TripCardProps } from "./TripCard";
 import CreateTripCard from "./CreateTripCard";
@@ -13,7 +12,7 @@ const TripsList = ({ trips }: TripsListProps) => {
       {trips.map((trip) => (
         <TripCard key={trip.id} {...trip} />
       ))}
-      
+
       {/* Create new trip card */}
       <CreateTripCard />
     </div>
