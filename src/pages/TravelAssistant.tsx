@@ -8,7 +8,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Menu, PlaneTakeoff, Map, Calendar, Check, LoaderCircle, Clock, Users, Globe, Lightbulb, Sparkles } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import AgentRecommendationBox from "@/components/AgentRecommendationBox";
 import EnhancedDashboardSidebar from "@/components/dashboard/EnhancedDashboardSidebar";
 
 interface DestinationSuggestion {
@@ -55,9 +54,9 @@ const TravelAssistant = () => {
     
     setIsGenerating(true);
     
-    // Simulate Fetch.ai agent processing
+    // Simulate AI processing
     setTimeout(() => {
-      // In a real implementation, this would be an API call to Fetch.ai
+      // In a real implementation, this would be an API call to AI service
       const mockRecommendations: DestinationSuggestion[] = [
         {
           name: "Tokyo Highlights Tour",
@@ -150,10 +149,10 @@ const TravelAssistant = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Sparkles className="h-5 w-5 text-travel-primary" />
-                    Fetch.ai Travel Recommendations
+                    AI Travel Recommendations
                   </CardTitle>
                   <CardDescription>
-                    Our AI agent will generate personalized travel recommendations based on your preferences
+                    Our AI will generate personalized travel recommendations based on your preferences
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -332,11 +331,6 @@ const TravelAssistant = () => {
             </div>
             
             <div className="col-span-1">
-              <AgentRecommendationBox 
-                tripDestination={destination || "your next destination"} 
-                interests={interests}
-              />
-              
               <Card className="mt-6">
                 <CardHeader>
                   <CardTitle className="text-lg">Why Use AI Travel Assistant?</CardTitle>
@@ -354,7 +348,7 @@ const TravelAssistant = () => {
                     <Clock className="h-5 w-5 text-travel-primary mt-0.5" />
                     <div>
                       <h3 className="font-medium">Save Planning Time</h3>
-                      <p className="text-sm text-gray-600">Our AI agent analyzes thousands of options to create the perfect itinerary in seconds.</p>
+                      <p className="text-sm text-gray-600">Our AI analyzes thousands of options to create the perfect itinerary in seconds.</p>
                     </div>
                   </div>
                   
