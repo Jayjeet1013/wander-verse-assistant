@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Menu, PlaneTakeoff, Map, Calendar, Check, LoaderCircle, Clock, Users, Globe, Lightbulb, Sparkles } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import EnhancedDashboardSidebar from "@/components/dashboard/EnhancedDashboardSidebar";
+import { generateTravelRecommendations } from "@/utils/apiClient";
 
 interface DestinationSuggestion {
   name: string;
@@ -42,7 +42,7 @@ const TravelAssistant = () => {
     }
   };
   
-  const generateRecommendations = () => {
+  const generateRecommendationsHandler = async () => {
     if (!destination) {
       toast({
         title: "Missing information",
@@ -54,51 +54,32 @@ const TravelAssistant = () => {
     
     setIsGenerating(true);
     
-    // Simulate AI processing
-    setTimeout(() => {
-      // In a real implementation, this would be an API call to AI service
-      const mockRecommendations: DestinationSuggestion[] = [
-        {
-          name: "Tokyo Highlights Tour",
-          description: "Explore the vibrant city of Tokyo with this carefully crafted itinerary that balances traditional culture and modern attractions.",
-          matchScore: 95,
-          image: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26",
-          highlights: [
-            "Visit Senso-ji Temple in Asakusa",
-            "Explore the Meiji Shrine and surrounding gardens",
-            "Experience modern Tokyo at Shibuya Crossing",
-            "Discover Japanese cuisine at Tsukiji Outer Market"
-          ]
-        },
-        {
-          name: "Cultural Kyoto Experience",
-          description: "Immerse yourself in Japan's cultural heritage with this Kyoto-focused itinerary featuring ancient temples and traditional experiences.",
-          matchScore: 89,
-          image: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e",
-          highlights: [
-            "Tour the Fushimi Inari Shrine with its thousand torii gates",
-            "Visit the golden Kinkaku-ji Temple",
-            "Experience a traditional tea ceremony",
-            "Stroll through the bamboo forest in Arashiyama"
-          ]
-        },
-        {
-          name: "Nature & Hot Springs Journey",
-          description: "Connect with Japan's natural beauty and relaxation traditions with this nature-focused itinerary featuring hot springs and scenic landscapes.",
-          matchScore: 87,
-          image: "https://images.unsplash.com/photo-1545569341-9eb8b30979d9",
-          highlights: [
-            "Relax in traditional onsen hot springs",
-            "Hike through scenic mountain trails",
-            "Visit Lake Kawaguchiko for Mt. Fuji views",
-            "Experience ryokan-style accommodation"
-          ]
-        }
-      ];
+    try {
+      const data = await generateTravelRecommendations({
+        destination,
+        travelerCount,
+        tripDuration,
+        interests,
+        budget,
+        additionalInfo
+      });
       
-      setRecommendations(mockRecommendations);
+      setRecommendations(data.recommendations);
+      
+      toast({
+        title: "Recommendations generated",
+        description: "Your personalized travel recommendations are ready!",
+      });
+    } catch (error) {
+      console.error('Error generating recommendations:', error);
+      toast({
+        title: "Error",
+        description: "Failed to generate recommendations. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
       setIsGenerating(false);
-    }, 3000);
+    }
   };
   
   const createTrip = (recommendation: DestinationSuggestion) => {
@@ -255,7 +236,7 @@ const TravelAssistant = () => {
                 </CardContent>
                 <CardFooter>
                   <Button 
-                    onClick={generateRecommendations}
+                    onClick={generateRecommendationsHandler}
                     disabled={isGenerating}
                     className="w-full"
                   >
