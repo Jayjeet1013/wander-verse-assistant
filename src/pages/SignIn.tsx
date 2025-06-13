@@ -79,7 +79,7 @@ const SignIn = () => {
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <Label htmlFor="password">Password</Label>
-                  <Link to="/reset-password" className="text-sm text-travel-primary hover:underline">
+                  <Link to="/forgot-password" className="text-sm text-travel-primary hover:underline">
                     Forgot password?
                   </Link>
                 </div>
